@@ -56,7 +56,7 @@ export const Header = ({ now }: HeaderProps) => {
         <div className="flex flex-col border-l-2 border-white/20 pl-10 text-white">
           {/* Mengubah text-5xl menjadi text-8xl */}
           <h1 className="text-4xl font-bold tracking-tight leading-none mb-2">
-             MASJID MUHAMMADIYAH AL-HUDA
+             MUSHOLLA MUHAMMADIYAH AL-HUDA
           </h1>
 
           {/* Mengubah text-xl menjadi text-3xl */}

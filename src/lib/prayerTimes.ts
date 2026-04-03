@@ -13,8 +13,8 @@ export const getPrayerTimes = (date: Date) => {
     params.adjustments.sunrise = -3;
     params.adjustments.dhuhr = 0;
     params.adjustments.asr = 1;
-    params.adjustments.maghrib = 2;
-    params.adjustments.isha = 1;
+    params.adjustments.maghrib = 3;
+    params.adjustments.isha = 2;
 
 
 
