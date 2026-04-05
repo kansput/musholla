@@ -24,52 +24,52 @@ export interface DaySchedule {
 
 export const weeklySchedule: Record<string, DaySchedule> = {
   Senin: {
-    subuh: { utama: "Warta", badal: "Dewa Alfian", muadzin: "" },
-    dzuhur: { utama: "Warta", badal: "Dewa Alfian", muadzin: "" },
-    ashar: { utama: "Dewa Alfian", badal: "Warta", muadzin: "" },
-    maghrib: { utama: "Warta", badal: "Dewa Alfian", muadzin: "" },
-    isya: { utama: "Warta", badal: "Dewa Alfian", muadzin: "" }
+    subuh: { utama: "Warta", badal: "Dewa Alfian", muadzin: "Warta" },
+    dzuhur: { utama: "Warta", badal: "Dewa Alfian", muadzin: "Warta" },
+    ashar: { utama: "Dewa Alfian", badal: "Warta", muadzin: "Warta" },
+    maghrib: { utama: "Warta", badal: "Dewa Alfian", muadzin: "Warta" },
+    isya: { utama: "Warta", badal: "Dewa Alfian", muadzin: "Warta" }
   },
   Selasa: {
-    subuh: { utama: "Tedi Koswara", badal: "Warta", muadzin: "" },
-    dzuhur: { utama: "Warta", badal: "Dewa Alfian", muadzin: "" },
-    ashar: { utama: "Dewa Alfian", badal: "Warta", muadzin: "" },
-    maghrib: { utama: "Dewa Alfian", badal: "Warta", muadzin: "" },
-    isya: { utama: "Tedi Koswara", badal: "Warta", muadzin: "" }
+    subuh: { utama: "Tedi Koswara", badal: "Warta", muadzin: "Warta" },
+    dzuhur: { utama: "Warta", badal: "Dewa Alfian", muadzin: "Warta" },
+    ashar: { utama: "Dewa Alfian", badal: "Warta", muadzin: "Warta" },
+    maghrib: { utama: "Dewa Alfian", badal: "Warta", muadzin: "Warta" },
+    isya: { utama: "Tedi Koswara", badal: "Warta", muadzin: "Warta" }
   },
   Rabu: {
-    subuh: { utama: "Syakir Abdullah", badal: "Sulchan", muadzin: "" },
-    dzuhur: { utama: "Warta", badal: "Sulchan", muadzin: "" },
-    ashar: { utama: "Tedi Koswara", badal: "Sulchan", muadzin: "" },
-    maghrib: { utama: "Syakir Abdullah", badal: "Warta", muadzin: "" },
-    isya: { utama: "Syakir Abdullah", badal: "Warta", muadzin: "" }
+    subuh: { utama: "Syakir Abdullah", badal: "Sulchan", muadzin: "Warta" },
+    dzuhur: { utama: "Warta", badal: "Sulchan", muadzin: "Warta" },
+    ashar: { utama: "Tedi Koswara", badal: "Sulchan", muadzin: "Warta" },
+    maghrib: { utama: "Syakir Abdullah", badal: "Warta", muadzin: "Warta" },
+    isya: { utama: "Syakir Abdullah", badal: "Warta", muadzin: "Warta" }
   },
   Kamis: {
-    subuh: { utama: "Kanda Putra", badal: "Warta", muadzin: "" },
-    dzuhur: { utama: "Warta", badal: "Dewa Alfian", muadzin: "" },
-    ashar: { utama: "Dewa Alfian", badal: "Warta", muadzin: "" },
-    maghrib: { utama: "Warta", badal: "Dewa Alfian", muadzin: "" },
-    isya: { utama: "Warta", badal: "Dewa Alfian", muadzin: "" }
+    subuh: { utama: "Kanda Putra", badal: "Warta", muadzin: "Warta" },
+    dzuhur: { utama: "Warta", badal: "Dewa Alfian", muadzin: "Warta" },
+    ashar: { utama: "Dewa Alfian", badal: "Warta", muadzin: "Warta" },
+    maghrib: { utama: "Warta", badal: "Dewa Alfian", muadzin: "Warta" },
+    isya: { utama: "Warta", badal: "Dewa Alfian", muadzin: "Warta" }
   },
   Jumat: {
-    subuh: { utama: "M.Syamsudin", badal: "Warta", muadzin: "" },
+    subuh: { utama: "M.Syamsudin", badal: "Warta", muadzin: "Warta" },
     jumat: { khatib: "KHOTIB", imam: "IMAM", muadzin: "Muadzin Jumat" },
-    ashar: { utama: "Dewa Alfian ", badal: "Warta", muadzin: "" },
-    maghrib: { utama: "M.Syamsudin", badal: "Warta", muadzin: "" },
-    isya: { utama: "M.Syamsudin", badal: "Warta", muadzin: "" }
+    ashar: { utama: "Dewa Alfian ", badal: "Warta", muadzin: "Warta" },
+    maghrib: { utama: "M.Syamsudin", badal: "Warta", muadzin: "Warta" },
+    isya: { utama: "M.Syamsudin", badal: "Warta", muadzin: "Warta" }
   },
   Sabtu: {
-    subuh: { utama: "Sulchan", badal: "Warta", muadzin: "" },
-    dzuhur: { utama: "Warta", badal: "Dewa Alfian", muadzin: "" },
-    ashar: { utama: "Dewa Alfian", badal: "Warta", muadzin: "" },
-    maghrib: { utama: "Warta", badal: "Dewa Alfian", muadzin: "" },
-    isya: { utama: "Azan Saleh", badal: "Warta", muadzin: "" }
+    subuh: { utama: "Sulchan", badal: "Warta", muadzin: "Warta" },
+    dzuhur: { utama: "Warta", badal: "Dewa Alfian", muadzin: "Warta" },
+    ashar: { utama: "Dewa Alfian", badal: "Warta", muadzin: "Warta" },
+    maghrib: { utama: "Warta", badal: "Dewa Alfian", muadzin: "Warta" },
+    isya: { utama: "Azan Saleh", badal: "Warta", muadzin: "Warta" }
   },
   Minggu: {
-    subuh: { utama: "Syakir Abdullah", badal: "Syamsudin", muadzin: "" },
-    dzuhur: { utama: "Warta", badal: "Dewa Alfian", muadzin: "" },
-    ashar: { utama: "Dewa Alfian", badal: "Warta", muadzin: "" },
-    maghrib: { utama: "Warta", badal: "Dewa Alfian", muadzin: "" },
-    isya: { utama: "Galuh Yogaswara", badal: "Tedi Koswara", muadzin: "" }
+    subuh: { utama: "Syakir Abdullah", badal: "Syamsudin", muadzin: "Warta" },
+    dzuhur: { utama: "Warta", badal: "Dewa Alfian", muadzin: "Warta" },
+    ashar: { utama: "Dewa Alfian", badal: "Warta", muadzin: "Warta" },
+    maghrib: { utama: "Warta", badal: "Dewa Alfian", muadzin: "Warta" },
+    isya: { utama: "Galuh Yogaswara", badal: "Tedi Koswara", muadzin: "Warta" }
   }
 };
