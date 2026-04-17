@@ -10,7 +10,7 @@ const elMessiri = El_Messiri({
 });
 
 export const metadata: Metadata = {
-  title: "Display Masjid Al-Huda",
+  title: "Display Musholla Al-Huda",
   description: "Jadwal Shalat PRM Rambutan",
 };
 

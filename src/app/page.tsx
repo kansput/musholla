@@ -6,7 +6,7 @@ import { getPrayerTimes } from '@/lib/prayerTimes';
 import { weeklySchedule } from '@/lib/weeklySchedule';
 import { isAfter } from 'date-fns';
 
-// Komponen
+// Components
 import { BackgroundGradient } from '@/components/BackgroundGradient';
 import { Header } from '@/components/Header';
 import { PrayerCard } from '@/components/PrayerCard';
@@ -34,26 +34,34 @@ export default function MushollaAlHuda() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const lastPlayedAudio = useRef<string | null>(null);
 
-  // Durasi konfigurasi
-  const DURASI_ADZAN = 225 * 1000;     // 3 menit 45 detik
-  const DURASI_INFO_IMAM = 15 * 1000;  // 15 detik
+  // Konfigurasi Durasi (ms)
+  const DURASI_ADZAN = 225 * 1000;
+  const DURASI_INFO_IMAM = 15 * 1000;
 
-  // Prayer times & schedule
+  // Data Sholat & Jadwal
   const prayerTimes = useMemo(() => getPrayerTimes(now), [now.toDateString()]);
-  const dayName = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"][now.getDay()];
-  const todayData: any = weeklySchedule[dayName];
+  const dayName = useMemo(() =>
+    ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"][now.getDay()],
+    [now.getDay()]
+  );
+  const todayData = (weeklySchedule as any)[dayName] || {};
 
-  // Inisialisasi
+  // Timer & Inisialisasi Audio
   useEffect(() => {
     audioRef.current = new Audio('/sounds/beep.mp3');
-    const timer = setInterval(() => setNow(new Date()), 1000);
-    return () => clearInterval(timer);
+    // FIX: interval 500ms agar countdown lebih responsif dan tidak skip angka
+    const timer = setInterval(() => setNow(new Date()), 500);
+    return () => {
+      clearInterval(timer);
+      // FIX: cleanup audio untuk prevent memory leak
+      audioRef.current?.pause();
+      audioRef.current = null;
+    };
   }, []);
 
-  // Logika utama untuk menentukan state aktif
-  const getActiveView = (): ActiveState => {
+  // Logika Utama Overlay (Disederhanakan & Memoized)
+  const activeState: ActiveState = useMemo(() => {
     const currentTime = now.getTime();
-
     const schedules = [
       { label: 'Subuh', time: prayerTimes.Subuh, img: '/subuh.png', iqomah: 14 },
       { label: 'Dzuhur', time: prayerTimes.Dzuhur, img: '/dzuhur.png', iqomah: 13 },
@@ -63,7 +71,6 @@ export default function MushollaAlHuda() {
     ];
 
     for (const s of schedules) {
-      // Skip Dzuhur di hari Jumat
       if (dayName === 'Jumat' && s.label === 'Dzuhur') continue;
 
       const pTime = s.time.getTime();
@@ -71,18 +78,15 @@ export default function MushollaAlHuda() {
       const endIqomah = endAdzan + (s.iqomah * 60 * 1000);
       const endImam = endIqomah + DURASI_INFO_IMAM;
 
-      // 1. State ADZAN
       if (currentTime >= pTime && currentTime < endAdzan) {
         return { type: 'ADZAN', data: { image: s.img, label: s.label } };
       }
 
-      // 2. State IQOMAH (Menggunakan Detik agar presisi)
       if (currentTime >= endAdzan && currentTime < endIqomah) {
         const remainingSeconds = Math.max(0, Math.floor((endIqomah - currentTime) / 1000));
         return { type: 'IQOMAH', data: { label: s.label, duration: remainingSeconds } };
       }
 
-      // 3. State IMAM
       if (currentTime >= endIqomah && currentTime < endImam) {
         const info = todayData[s.label.toLowerCase()] || {};
         return {
@@ -95,20 +99,24 @@ export default function MushollaAlHuda() {
         };
       }
     }
-
     return { type: 'MAIN' };
-  };
+  }, [now, prayerTimes, dayName, todayData]);
 
-  const activeState = getActiveView();
-
-  // Di page.tsx sekitar baris 102
+  // Handler Audio
+  // FIX: reset lastPlayedAudio hanya saat kembali ke MAIN (semua fase selesai)
+  // agar audio tidak mungkin bunyi ulang di tengah fase IQOMAH/IMAM
   useEffect(() => {
-    if (activeState.type === 'ADZAN' && audioEnabled && lastPlayedAudio.current !== activeState.data.label) {
-      // Hilangkan // di bawah ini agar suara aktif
+    const stateLabel = activeState.type === 'ADZAN' ? activeState.data.label : null;
+
+    if (stateLabel && audioEnabled && lastPlayedAudio.current !== stateLabel) {
       audioRef.current?.play().catch(() => { });
-      lastPlayedAudio.current = activeState.data.label;
+      lastPlayedAudio.current = stateLabel;
     }
-  }, [activeState, audioEnabled]);
+
+    if (activeState.type === 'MAIN') {
+      lastPlayedAudio.current = null;
+    }
+  }, [activeState.type, (activeState as any).data?.label, audioEnabled]);
 
   const unlockAudio = () => {
     if (!audioEnabled) {
@@ -119,12 +127,10 @@ export default function MushollaAlHuda() {
     }
   };
 
-  // Render Overlay
   const renderOverlay = () => {
     switch (activeState.type) {
       case 'ADZAN':
         return <AdzanOverlay isVisible imagePath={activeState.data.image} />;
-
       case 'IQOMAH':
         const iqData = todayData[activeState.data.label.toLowerCase()] || {};
         return (
@@ -138,7 +144,6 @@ export default function MushollaAlHuda() {
             onFinish={() => { }}
           />
         );
-
       case 'IMAM':
         return (
           <ImamOverlay
@@ -148,7 +153,6 @@ export default function MushollaAlHuda() {
             badal={activeState.data.badal}
           />
         );
-
       default:
         return null;
     }
@@ -157,13 +161,13 @@ export default function MushollaAlHuda() {
   const displaySchedules = [
     { label: 'Subuh', time: prayerTimes.Subuh, ...todayData?.subuh },
     { label: 'Syuruq', time: prayerTimes.Terbit },
-    { label: 'Dzuhur', time: prayerTimes.Dzuhur, ...(todayData?.dzuhur || {}) },
+    { label: 'Dzuhur', time: prayerTimes.Dzuhur, ...todayData?.dzuhur },
     { label: 'Ashar', time: prayerTimes.Ashar, ...todayData?.ashar },
     { label: 'Maghrib', time: prayerTimes.Maghrib, ...todayData?.maghrib },
     { label: 'Isya', time: prayerTimes.Isya, ...todayData?.isya },
   ];
 
-  const nextPrayer = displaySchedules.find((p: any) => isAfter(p.time, now));
+  const nextPrayer = displaySchedules.find((p) => isAfter(p.time, now));
 
   return (
     <main
@@ -179,7 +183,7 @@ export default function MushollaAlHuda() {
         <Header now={now} />
 
         <div className="grid grid-cols-6 gap-5 my-6 animate-in fade-in duration-700">
-          {displaySchedules.map((item: any) => (
+          {displaySchedules.map((item) => (
             <PrayerCard
               key={item.label}
               label={item.label}
@@ -196,6 +200,7 @@ export default function MushollaAlHuda() {
         <MarqueeFooter />
       </div>
 
+      {/* Audio Status Indicator */}
       <div className="fixed bottom-6 right-6 z-[200] flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/20 backdrop-blur-sm border border-white/10 opacity-30">
         <div className={`w-1.5 h-1.5 rounded-full ${audioEnabled ? 'bg-green-500' : 'bg-red-500 animate-pulse'}`} />
         <span className="text-[10px] font-bold uppercase tracking-tighter">
